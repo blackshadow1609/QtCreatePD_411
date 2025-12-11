@@ -8,6 +8,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , m_duration_player(this)  // Инициализация m_duration_player
 {
     ui->setupUi(this);
 
@@ -87,10 +88,12 @@ void MainWindow::loadFileToPlaylist(const QString &filename)
     QList<QStandardItem*> items;
     items.append(new QStandardItem(QDir(filename).dirName()));
     items.append(new QStandardItem(filename));
+
+    // Получаем длительность трека
     m_duration_player.setMedia(QUrl(filename));
-    m_duration_player.play();
-    items.append(new QStandardItem(QString::number(m_duration_player.duration())));
-    m_duration_player.pause();
+    m_duration_player.play(); // Начинаем воспроизведение для получения длительности
+    items.append(new QStandardItem(QTime::fromMSecsSinceStartOfDay(m_duration_player.duration()).toString("hh:mm:ss")));
+    m_duration_player.pause(); // Останавливаем воспроизведение
 
     m_playlist_model->appendRow(items);
 }

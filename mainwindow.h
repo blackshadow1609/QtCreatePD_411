@@ -6,6 +6,7 @@
 #include <QMediaPlaylist>
 #include <QStandardItemModel>
 
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -54,9 +55,10 @@ private:
     QMediaPlayer* m_player;
     QMediaPlaylist* m_playlist;
     QStandardItemModel* m_playlist_model;
+    QMediaPlayer m_duration_player;  // Для получения длительности треков
     bool shuffle;
     bool loop;
 
-    QMediaPlayer m_duration_player;
+
 };
 #endif // MAINWINDOW_H
