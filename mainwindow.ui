@@ -36,9 +36,9 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>85</x>
+      <x>100</x>
       <y>51</y>
-      <width>55</width>
+      <width>70</width>
       <height>25</height>
      </rect>
     </property>
@@ -58,9 +58,9 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>152</x>
+      <x>180</x>
       <y>51</y>
-      <width>55</width>
+      <width>70</width>
       <height>25</height>
      </rect>
     </property>
@@ -80,9 +80,9 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>219</x>
+      <x>260</x>
       <y>51</y>
-      <width>55</width>
+      <width>70</width>
       <height>25</height>
      </rect>
     </property>
@@ -104,7 +104,7 @@
      <rect>
       <x>22</x>
       <y>51</y>
-      <width>55</width>
+      <width>70</width>
       <height>25</height>
      </rect>
     </property>
@@ -124,9 +124,9 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>286</x>
+      <x>340</x>
       <y>51</y>
-      <width>55</width>
+      <width>70</width>
       <height>25</height>
      </rect>
     </property>
@@ -146,9 +146,9 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>353</x>
-      <y>51</y>
-      <width>55</width>
+      <x>20</x>
+      <y>410</y>
+      <width>70</width>
       <height>25</height>
      </rect>
     </property>
@@ -167,7 +167,7 @@
      <rect>
       <x>420</x>
       <y>54</y>
-      <width>121</width>
+      <width>141</width>
       <height>18</height>
      </rect>
     </property>
@@ -231,7 +231,7 @@
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>160</y>
+      <y>150</y>
       <width>571</width>
       <height>16</height>
      </rect>
@@ -246,9 +246,9 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>550</x>
+      <x>574</x>
       <y>50</y>
-      <width>55</width>
+      <width>30</width>
       <height>25</height>
      </rect>
     </property>
@@ -266,10 +266,75 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>190</y>
+      <y>170</y>
       <width>591</width>
-      <height>251</height>
+      <height>221</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonDir">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>410</y>
+      <width>70</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Dir</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonDel">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>410</y>
+      <width>70</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Del</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonClr">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>410</y>
+      <width>70</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Clr</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonShuffle">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>90</y>
+      <width>70</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Shuffle</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonLoop">
+    <property name="geometry">
+     <rect>
+      <x>340</x>
+      <y>90</y>
+      <width>70</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Loop</string>
     </property>
    </widget>
   </widget>
