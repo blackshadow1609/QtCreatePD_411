@@ -37,8 +37,9 @@ private slots:
 
     void on_duration_changed(qint64 duration);
 
-    void on_position_changed(qint64 position);
+    void on_duration_loaded(qint64 duration, int row);
 
+    void on_position_changed(qint64 position);
 
     void on_horizontalSliderTime_sliderMoved(int position);
 
@@ -49,6 +50,12 @@ private slots:
     void on_pushButtonDel_clicked();
 
     void on_pushButtonClr_clicked();
+
+    void on_pushButtonDir_clicked();
+
+    void savePlaylistOnExit();
+
+    void loadPlaylistOnStart();
 
 private:
     Ui::MainWindow *ui;

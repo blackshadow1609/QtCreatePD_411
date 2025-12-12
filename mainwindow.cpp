@@ -1,14 +1,22 @@
-#include "mainwindow.h"
+#include "mainwindow.h"                                             //Ctrl+I - Авто форматирование выделеного кода
 #include "ui_mainwindow.h"
 #include <QStyle>
 #include <QFileDialog>
 #include <QTime>
 #include <QStyleFactory>
+#include <QStandardPaths>   //
+#include <QProgressDialog>  //
+#include <QDebug>           //
+#include <QDir>             //
+#include <QApplication>     //
+#include <QEventLoop>       //
+#include <QTextStream>      //
+#include <QFileInfo>        //
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , m_duration_player(this)  // Инициализация m_duration_player
+    , m_duration_player(this)
 {
     ui->setupUi(this);
 
@@ -19,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->pushButtonPause->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
     ui->pushButtonStop->setIcon(style()->standardIcon(QStyle::SP_MediaStop));
     ui->pushButtonNext->setIcon(style()->standardIcon(QStyle::SP_MediaSeekForward));
-    ui->pushButtonShuffle->setIcon(style()->standardIcon(QStyle::SP_BrowserReload));            //единственная похожая по смыслу из доступных
+    ui->pushButtonShuffle->setIcon(style()->standardIcon(QStyle::SP_BrowserReload));        //единственная похожая по смыслу из доступных
     ui->pushButtonLoop->setIcon(style()->standardIcon(QStyle::SP_BrowserReload));
 
     ui->horizontalSliderVolume->setRange(0, 100);
@@ -34,10 +42,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(m_player, &QMediaPlayer::positionChanged, this, &MainWindow :: on_position_changed);
     connect(this->ui->horizontalSliderTime, &QSlider::sliderMoved, this, &MainWindow::on_horizontalSliderTime_sliderMoved);
 
-                                                                                            //Playlist init
+    //Playlist init
     m_playlist_model = new QStandardItemModel(this);
     initPlaylist();
-
     m_playlist = new QMediaPlaylist(m_player);
     m_player->setPlaylist(m_playlist);
 
@@ -46,20 +53,23 @@ MainWindow::MainWindow(QWidget *parent)
     connect(this->m_playlist, &QMediaPlaylist::currentIndexChanged, this->ui->tableViewPlaylist, &QTableView::selectRow);
     connect(this->ui->tableViewPlaylist, &QTableView::doubleClicked,
             [this](const QModelIndex& index){m_playlist->setCurrentIndex(index.row()); this->m_player->play();}
-            );
+    );
     connect(this->m_player, &QMediaPlayer::currentMediaChanged,
             [this](const QMediaContent& media)
     {
         this->ui->labelFilename->setText(media.canonicalUrl().toString());
         this->setWindowTitle(this->ui->labelFilename->text().split('/').last());
     }
-            );
+    );
     shuffle = false;
     loop = false;
+    /////////////////////////////////////////////////////////////////////////////////////
+    connect(qApp, &QApplication::aboutToQuit, this, &MainWindow::savePlaylistOnExit);
+
+    loadPlaylistOnStart();
+    /////////////////////////////////////////////////////////////////////////////////////
 
 }
-
-
 
 MainWindow::~MainWindow()
 {
@@ -84,62 +94,67 @@ void MainWindow::initPlaylist()
 
 void MainWindow::loadFileToPlaylist(const QString &filename)
 {
+    //////////////////////////////////////////////////////////////////////////////////
+    int currentRow = m_playlist_model->rowCount();
+
     m_playlist->addMedia(QUrl(filename));
     QList<QStandardItem*> items;
     items.append(new QStandardItem(QDir(filename).dirName()));
     items.append(new QStandardItem(filename));
-
-    // Получаем длительность трека
-    m_duration_player.setMedia(QUrl(filename));
-    m_duration_player.play(); // Начинаем воспроизведение для получения длительности
-    items.append(new QStandardItem(QTime::fromMSecsSinceStartOfDay(m_duration_player.duration()).toString("hh:mm:ss")));
-    m_duration_player.pause(); // Останавливаем воспроизведение
-
+    items.append(new QStandardItem("hh:mm:ss"));
     m_playlist_model->appendRow(items);
+
+    //для получения длительности
+    QMediaPlayer* durationPlayer = new QMediaPlayer(this);
+    durationPlayer->setMedia(QUrl::fromLocalFile(filename));
+
+    //сигнал загрузки длительности
+    connect(durationPlayer, &QMediaPlayer::durationChanged,
+            [this, currentRow, durationPlayer](qint64 duration) {
+        this->on_duration_loaded(duration, currentRow);
+        durationPlayer->deleteLater();
+    });
+
+    durationPlayer->play();
+    durationPlayer->pause();
 }
-
-
+////////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_pushButtonAdd_clicked()
 {
-     QStringList files = QFileDialog::getOpenFileNames
-              (
-                  this,
-                  "Open file",
-                  "C:\\Users\\wwwbl\\Music",
-                  "Audio files (*.mp3 *.flac *.flacc);; mp3 (*.mp3);; Flac (*.flac *.flacc)"
-               );
+    QStringList files = QFileDialog::getOpenFileNames
+            (
+                this,
+                "Open file",
+                "C:\\Users\\wwwbl\\Music",
+                "Audio files (*.mp3 *.flac *.flacc);; mp3 (*.mp3);; Flac (*.flac *.flacc)"
+                );
 
-      for(QString file:files)
-        {
-            loadFileToPlaylist(file);
-        }
+    for(QString file:files)
+    {
+        loadFileToPlaylist(file);
+    }
 }
-
 
 void MainWindow::on_pushButtonPlay_clicked()
 {
     this->m_player->play();
 }
 
-
 void MainWindow::on_pushButtonPause_clicked()
 {
-   m_player->state() == QMediaPlayer :: State :: PausedState ? m_player->play() : this->m_player->pause();
+    m_player->state() == QMediaPlayer :: State :: PausedState ? m_player->play() : this->m_player->pause();
 }
-
 
 void MainWindow::on_pushButtonStop_clicked()
 {
     this->m_player->stop();
 }
 
-
 void MainWindow::on_pushButtonMute_clicked()
 {
     m_player->setMuted(!m_player->isMuted());
     ui->pushButtonMute->setIcon(style()->standardIcon(m_player->isMuted() ? QStyle :: SP_MediaVolumeMuted : QStyle::SP_MediaVolume));
 }
-
 
 void MainWindow::on_horizontalSliderVolume_valueChanged(int value)
 {
@@ -152,20 +167,28 @@ void MainWindow::on_duration_changed(qint64 duration)
     this->ui->horizontalSliderTime->setRange(0, duration);
     this->ui->labelDuration->setText(QTime :: fromMSecsSinceStartOfDay(duration).toString("hh:mm:ss"));
 }
-
+//////////////////////////////////////////////////////////
+void MainWindow::on_duration_loaded(qint64 duration, int row)
+{
+    if (duration > 0) {
+        QStandardItem* durationItem = new QStandardItem(QTime::fromMSecsSinceStartOfDay(duration).toString("hh:mm:ss"));
+        m_playlist_model->setItem(row, 2, durationItem);
+    } else {
+        QStandardItem* durationItem = new QStandardItem("hh:mm:ss");
+        m_playlist_model->setItem(row, 2, durationItem);
+    }
+}
+/////////////////////////////////////////////////////////
 void MainWindow::on_position_changed(qint64 position)
 {
     this->ui->labelposition->setText(QString(QTime :: fromMSecsSinceStartOfDay(position).toString("hh:mm:ss")));
     this->ui->horizontalSliderTime->setValue(position);
 }
 
-
-
 void MainWindow::on_horizontalSliderTime_sliderMoved(int position)
 {
     this->m_player->setPosition(position);
 }
-
 
 void MainWindow::on_pushButtonShuffle_clicked()
 {
@@ -175,7 +198,6 @@ void MainWindow::on_pushButtonShuffle_clicked()
     this->ui->pushButtonShuffle->setChecked(shuffle);
 }
 
-
 void MainWindow::on_pushButtonLoop_clicked()
 {
     loop = !loop;
@@ -184,23 +206,20 @@ void MainWindow::on_pushButtonLoop_clicked()
     this->ui->pushButtonLoop->setChecked(loop);
 }
 
-
 void MainWindow::on_pushButtonDel_clicked()
 {
-
-     QItemSelectionModel* selection = nullptr;
+    QItemSelectionModel* selection = nullptr;
     do
     {
-       selection = ui->tableViewPlaylist->selectionModel();
-       QModelIndexList indexes = selection->selectedRows();
-       if(selection->selectedRows().count()>0)
-       {
-       m_playlist_model->removeRow(indexes.first().row());
-       m_playlist->removeMedia(indexes.first().row());
-       }
+        selection = ui->tableViewPlaylist->selectionModel();
+        QModelIndexList indexes = selection->selectedRows();
+        if(selection->selectedRows().count()>0)
+        {
+            m_playlist_model->removeRow(indexes.first().row());
+            m_playlist->removeMedia(indexes.first().row());
+        }
     }while(selection->selectedRows().count());
 }
-
 
 void MainWindow::on_pushButtonClr_clicked()
 {
@@ -209,3 +228,98 @@ void MainWindow::on_pushButtonClr_clicked()
     initPlaylist();
 }
 
+void MainWindow::on_pushButtonDir_clicked()
+{
+    /////////////////////////////////////////////////////////////////////////////////////////
+
+    QString dirname = QFileDialog::getExistingDirectory
+            (
+                this,
+                "Add directory",
+                QStandardPaths::writableLocation(QStandardPaths::MusicLocation),
+                QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks
+                );
+
+    if (dirname.isEmpty()) {
+        return;
+    }
+    QDir dir(dirname);
+    QStringList filters;
+    filters << "*.mp3" << "*.flac";
+    dir.setNameFilters(filters);
+    dir.setFilter(QDir::Files | QDir::NoDotAndDotDot | QDir::Readable);
+
+    QFileInfoList files = dir.entryInfoList();
+
+    //прогресс загрузки
+    QProgressDialog progress("Loading files...", "Cancel", 0, files.count(), this);
+    progress.setWindowModality(Qt::WindowModal);
+    for (int i = 0; i < files.count(); i++) {
+        if (progress.wasCanceled()) {
+            break;
+        }
+        const QFileInfo& file = files.at(i);
+        QString filePath = file.absoluteFilePath();
+        loadFileToPlaylist(filePath);
+
+        progress.setValue(i + 1);
+        QApplication::processEvents(); //что б лучше отзывалась UI
+    }
+
+}
+//////////////////////////////////////////////////////////////////////////////////
+void MainWindow::savePlaylistOnExit()
+{
+    QString playlistPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QDir dir(playlistPath);
+    if (!dir.exists()) {
+        dir.mkpath(playlistPath);
+    }
+
+    QString savePath = playlistPath + "/playlist.m3u";
+
+    m_playlist->save(QUrl::fromLocalFile(savePath), "m3u");
+    qDebug() << "Playlist saved to:" << savePath;
+}
+
+void MainWindow::loadPlaylistOnStart()
+{
+    QString playlistPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/playlist.m3u";
+
+    if (QFile::exists(playlistPath)) {
+        qDebug() << "Loading playlist from:" << playlistPath;
+
+        QFile file(playlistPath);
+        if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            QTextStream in(&file);
+            while (!in.atEnd()) {
+                QString line = in.readLine().trimmed();
+
+                if (line.startsWith("#") || line.isEmpty()) {
+                    continue;
+                }
+
+                QString filePath = line;
+                QFileInfo fileInfo(filePath);
+                if (!fileInfo.isAbsolute()) {
+                    QFileInfo playlistInfo(playlistPath);
+                    QString dirPath = playlistInfo.absolutePath();
+                    filePath = QDir(dirPath).absoluteFilePath(line);
+                }
+
+                if (QFile::exists(filePath)) {
+                    loadFileToPlaylist(filePath);
+                } else {
+                    qDebug() << "File not found, skipping:" << filePath;
+                }
+            }
+            file.close();
+            qDebug() << "Playlist loaded, tracks:" << m_playlist->mediaCount();
+        } else {
+            qDebug() << "Failed to open playlist file:" << playlistPath;
+        }
+    } else {
+        qDebug() << "No saved playlist found at:" << playlistPath;
+    }
+}
+/////////////////////////////////////////////////////////////////////////////////////////////
