@@ -1,5 +1,12 @@
 <RCC>
     <qresource prefix="/icons">
         <file>Ico/headphone_icon_124385.ico</file>
+        <file>Ico/back.ico</file>
+        <file>Ico/mix.ico</file>
+        <file>Ico/next.ico</file>
+        <file>Ico/pause.ico</file>
+        <file>Ico/play.ico</file>
+        <file>Ico/repeat.ico</file>
+        <file>Ico/stop.ico</file>
     </qresource>
 </RCC>

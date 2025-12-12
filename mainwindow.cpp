@@ -21,14 +21,14 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     //      Buttons style:
-    ui->pushButtonAdd->setIcon(style()->standardIcon(QStyle::SP_DriveCDIcon));
-    ui->pushButtonPrev->setIcon(style()->standardIcon(QStyle::SP_MediaSeekBackward));
-    ui->pushButtonPlay->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
-    ui->pushButtonPause->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
-    ui->pushButtonStop->setIcon(style()->standardIcon(QStyle::SP_MediaStop));
-    ui->pushButtonNext->setIcon(style()->standardIcon(QStyle::SP_MediaSeekForward));
-    ui->pushButtonShuffle->setIcon(style()->standardIcon(QStyle::SP_BrowserReload));        //единственная похожая по смыслу из доступных
-    ui->pushButtonLoop->setIcon(style()->standardIcon(QStyle::SP_BrowserReload));
+//    ui->pushButtonAdd->setIcon(style()->standardIcon(QStyle::SP_DriveCDIcon));
+//    ui->pushButtonPrev->setIcon(style()->standardIcon(QStyle::SP_MediaSeekBackward));
+//    ui->pushButtonPlay->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
+//    ui->pushButtonPause->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
+//    ui->pushButtonStop->setIcon(style()->standardIcon(QStyle::SP_MediaStop));
+//    ui->pushButtonNext->setIcon(style()->standardIcon(QStyle::SP_MediaSeekForward));
+//    ui->pushButtonShuffle->setIcon(style()->standardIcon(QStyle::SP_BrowserReload));        //единственная похожая по смыслу из доступных
+//    ui->pushButtonLoop->setIcon(style()->standardIcon(QStyle::SP_BrowserReload));
 
     ui->horizontalSliderVolume->setRange(0, 100);
 
