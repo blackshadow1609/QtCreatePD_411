@@ -5,7 +5,9 @@
 #include <QMediaPlayer>
 #include <QMediaPlaylist>
 #include <QStandardItemModel>
-
+#include "qcustomplot.h"
+#include <QTimer>
+#include <QVector>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -57,15 +59,30 @@ private slots:
 
     void loadPlaylistOnStart();
 
+    void setupEqualizer();
+
+    void setupAudioVisualization();
+    void updateAudioVisualization();
+    void showVisualization();
+    void onPlayerStateChanged(QMediaPlayer::State state);
+
 private:
     Ui::MainWindow *ui;
     QMediaPlayer* m_player;
     QMediaPlaylist* m_playlist;
     QStandardItemModel* m_playlist_model;
-    QMediaPlayer m_duration_player;  // Для получения длительности треков
+    QMediaPlayer m_duration_player;
     bool shuffle;
     bool loop;
 
+    QDialog *visualizationDialog;
+    QCustomPlot *visualizationPlot;
+    QTimer *visualizationTimer;
+    QVector<double> spectrumData;
+    QVector<double> xValues;
+    QVector<QCPBars*> spectrumBars;
+    int spectrumBands;
+    bool isPlaying;
 
 };
 #endif // MAINWINDOW_H

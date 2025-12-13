@@ -47,8 +47,8 @@
       <brush brushstyle="SolidPattern">
        <color alpha="255">
         <red>0</red>
-        <green>170</green>
-        <blue>255</blue>
+        <green>33</green>
+        <blue>50</blue>
        </color>
       </brush>
      </colorrole>
@@ -76,8 +76,8 @@
       <brush brushstyle="SolidPattern">
        <color alpha="255">
         <red>0</red>
-        <green>170</green>
-        <blue>255</blue>
+        <green>33</green>
+        <blue>50</blue>
        </color>
       </brush>
      </colorrole>
@@ -96,8 +96,8 @@
       <brush brushstyle="SolidPattern">
        <color alpha="255">
         <red>0</red>
-        <green>170</green>
-        <blue>255</blue>
+        <green>33</green>
+        <blue>50</blue>
        </color>
       </brush>
      </colorrole>
@@ -105,8 +105,8 @@
       <brush brushstyle="SolidPattern">
        <color alpha="255">
         <red>0</red>
-        <green>170</green>
-        <blue>255</blue>
+        <green>33</green>
+        <blue>50</blue>
        </color>
       </brush>
      </colorrole>
@@ -391,6 +391,70 @@
       <height>221</height>
      </rect>
     </property>
+    <property name="palette">
+     <palette>
+      <active>
+       <colorrole role="Base">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>255</red>
+          <green>255</green>
+          <blue>255</blue>
+         </color>
+        </brush>
+       </colorrole>
+       <colorrole role="Window">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>0</red>
+          <green>37</green>
+          <blue>56</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </active>
+      <inactive>
+       <colorrole role="Base">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>255</red>
+          <green>255</green>
+          <blue>255</blue>
+         </color>
+        </brush>
+       </colorrole>
+       <colorrole role="Window">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>0</red>
+          <green>37</green>
+          <blue>56</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </inactive>
+      <disabled>
+       <colorrole role="Base">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>0</red>
+          <green>37</green>
+          <blue>56</blue>
+         </color>
+        </brush>
+       </colorrole>
+       <colorrole role="Window">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>0</red>
+          <green>37</green>
+          <blue>56</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </disabled>
+     </palette>
+    </property>
     <property name="font">
      <font>
       <family>Arial</family>
@@ -450,7 +514,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>S</string>
+     <string/>
     </property>
     <property name="icon">
      <iconset resource="Icons.qrc">
@@ -467,7 +531,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>L</string>
+     <string/>
     </property>
     <property name="icon">
      <iconset resource="Icons.qrc">

@@ -1,6 +1,4 @@
-QT       += core gui multimedia
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+QT += core gui widgets multimedia printsupport
 
 CONFIG += c++11
 
@@ -10,10 +8,12 @@ CONFIG += c++11
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    3rdparty/qcustomplot.cpp
 
 HEADERS += \
-    mainwindow.h
+    mainwindow.h \
+    3rdparty/qcustomplot.h
 
 FORMS += \
     mainwindow.ui
@@ -25,3 +25,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     Icons.qrc
+
+# Добавьте эту строку если файлы в 3rdparty не находятся
+INCLUDEPATH += $$PWD/3rdparty
